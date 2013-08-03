@@ -114,6 +114,7 @@ sub run {
   my $keyfile = $args{keyfile} // 'keywords';
   my $allowed_keywords_file = $args{allowed_keywords} // '';
   my $debug = $args{debug} // 0;
+  my $web_depth = $args{web_depth} // 3;
 
   open FILE, "<$infile" or die "problem opening file \'$infile\' for reading\n$!";
   my @input = <FILE>;
@@ -163,7 +164,8 @@ sub run {
         links => \%links,
         keywords => \@keywords,
         allowed_keywords => \%allowed_keywords,
-        debug_enabled => $debug
+        debug_enabled => $debug,
+        web_depth => $web_depth,
       );
       my $count = $spider->spider_links();
 
@@ -211,7 +213,8 @@ CONTINUE:
     links => \%links,
     keywords => \@keywords,
     allowed_keywords => \%allowed_keywords,
-    debug_enabled => $debug
+    debug_enabled => $debug,
+    web_depth => $web_depth,
   );
   my $count = $spider->spider_links();
 

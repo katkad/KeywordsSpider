@@ -16,7 +16,7 @@ has [qw/output_file links/] => (
   required => 1,
 );
 
-has [qw/keywords allowed_keywords debug_enabled/] => (
+has [qw/keywords allowed_keywords debug_enabled web_depth/] => (
   is => 'ro',
   required => 1,
 );
@@ -311,10 +311,10 @@ sub spider_website {
   # checks if there are other urls than initial
   if (@keys && !$self->is_already_crawled()) {
 
-    # website is spidered to depth = 3
+    # website is spidered to web_depth
     # referrer to depth = 1
-    $want_spider = $self->links->{$self->website}{want_spider} || 0;
-    $max_depth = ($want_spider) ? 3 : 1;
+    $want_spider = $self->links->{$self->website}{want_spider} // 0;
+    $max_depth = ($want_spider) ? $self->web_depth : 1;
 
     $self->debug("MAAAAAAX ". $self->website ." $max_depth\n");
 
