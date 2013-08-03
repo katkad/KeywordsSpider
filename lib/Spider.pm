@@ -249,7 +249,7 @@ sub check_website {
     }
   }
 
-  $self->add_text("ALERT $url\n") if $is_alerted;
+  $self->add_text("ALERT ") if $is_alerted;
 
   my $keyword_count = scalar @matched_keywords;
 
