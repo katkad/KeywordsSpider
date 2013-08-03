@@ -16,7 +16,7 @@ has [qw/output_file links/] => (
   required => 1,
 );
 
-has [qw/keywords allowed_keywords/] => (
+has [qw/keywords allowed_keywords debug_enabled/] => (
   is => 'ro',
   required => 1,
 );
@@ -53,6 +53,29 @@ $ua->cookie_jar(
 $ua->timeout(15);
 $ua->max_size(512*1024);
 
+sub find_origin {
+  my ($url) = @_;
+
+  my $origin = $url;
+  $origin =~ s/https?:\/\///;
+  $origin =~ s/\/.*$//;
+
+  my $domain = $origin;
+  $domain =~ s/www\.//;
+
+  return ($origin, $domain);
+}
+
+sub debug {
+  my ($self, $string) = @_;
+
+  if($self->debug_enabled) {
+    print "$string";
+  }
+
+  return;
+}
+
 sub is_already_crawled {
   my ($self) = @_;
 
@@ -65,19 +88,6 @@ sub is_already_crawled {
   }
 
   return 1;
-}
-
-sub find_origin {
-  my ($url) = @_;
-
-  my $origin = $url;
-  $origin =~ s/https?:\/\///;
-  $origin =~ s/\/.*$//;
-
-  my $domain = $origin;
-  $domain =~ s/www\.//;
-
-  return ($origin, $domain);
 }
 
 sub get_root {
@@ -283,7 +293,7 @@ sub spider_website {
   my ($self) = @_;
 
   my $start = time;
-  print "TIME".$start."\n";
+  $self->debug("TIME".$start."\n");
 
   # fetch initial website
   my $want_spider = 1;
@@ -291,8 +301,8 @@ sub spider_website {
   $self->alerted(
     $self->fetch_website($self->website, $want_spider, $max_depth));
 
-  print "PO:\n";
-  print Dumper $self->links;
+  $self->debug("PO:\n");
+  $self->debug(Dumper $self->links);
 # ma is_already_crawled ked tam uz mozu byt linky ktore maju vacsiu depth ako 1 ?
 # ale z tej jednej startovacej url nemozu by linky s depth vacsie ako 1
 
@@ -306,10 +316,10 @@ sub spider_website {
     $want_spider = $self->links->{$self->website}{want_spider} || 0;
     $max_depth = ($want_spider) ? 3 : 1;
 
-    print "MAAAAAAX ". $self->website ." $max_depth\n";
+    $self->debug("MAAAAAAX ". $self->website ." $max_depth\n");
 
     for (my $depth = 1; $depth <= $max_depth; $depth++) {
-      print "DEPTH".$depth."\n";
+      $self->debug("DEPTH".$depth."\n");
 
       $self->proceed($start, $depth, $want_spider);
     }
@@ -337,7 +347,7 @@ sub proceed {
         last;
       }
       else {
-        print "fetching $_\n";
+        $self->debug("fetching $_\n");
         $self->add_text("fetching $_\n");
       }
 
@@ -357,7 +367,7 @@ sub settle_website {
 
   $self->links->{$website}{fetched} = 1;
 
-  print "SPIDER ".$website."\n";
+  $self->debug("SPIDER ".$website."\n");
   $self->add_text("\nSPIDER ".$website."\n");
 
   if ( $website !~ /http/ ) {
@@ -371,11 +381,11 @@ sub settle_website {
   $self->origin($origin);
   $self->origin_domain($origin_domain);
 
-  print "ORIGIN". $origin ."\n";
-  print "DOMAIN". $origin_domain ."\n";
+  $self->debug("ORIGIN". $origin ."\n");
+  $self->debug("DOMAIN". $origin_domain ."\n");
 
-  print "PRED:\n";
-  print Dumper $self->links;
+  $self->debug("PRED:\n");
+  $self->debug(Dumper $self->links);
 
   return;
 }

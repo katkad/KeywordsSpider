@@ -22,6 +22,16 @@ my $old_origin_domain = '^$';
 
 my $COUNT = 0;
 
+sub debug {
+  my ($string, $debug) = @_;
+
+  if ($debug) {
+    print "$string";
+  }
+
+  return;
+}
+
 sub _normalize_url {
   my $url = shift;
 
@@ -148,8 +158,13 @@ sub run {
 
       $pm->start and goto CONTINUE;
 
-      my $spider = Spider->new(output_file => $fh, links => \%links,
-        keywords => \@keywords, allowed_keywords => \%allowed_keywords);
+      my $spider = Spider->new(
+        output_file => $fh,
+        links => \%links,
+        keywords => \@keywords,
+        allowed_keywords => \%allowed_keywords,
+        debug_enabled => $debug
+      );
       my $count = $spider->spider_links();
 
 #      my $count = spider_links(%links);
@@ -169,7 +184,7 @@ CONTINUE:
     else {
       $links{$website} = { depth => 0, want_spider => 1 };
     }
-    print "\n";
+    debug("\n", $debug);
 
     if ( $referrer !~ /${skip_ref_regexp}/ ) {
       $referrer = _remove_garbage($referrer);
@@ -191,14 +206,19 @@ CONTINUE:
   $spidered_websites++;
   $pm->start and goto END; # do the fork
 
-  my $spider = Spider->new(output_file => $fh, links => \%links,
-    keywords => \@keywords, allowed_keywords => \%allowed_keywords);
+  my $spider = Spider->new(
+    output_file => $fh,
+    links => \%links,
+    keywords => \@keywords,
+    allowed_keywords => \%allowed_keywords,
+    debug_enabled => $debug
+  );
   my $count = $spider->spider_links();
 
   $pm->finish($count);
 
 END:
-  print "waiting for children\n";
+  debug("waiting for children\n", $debug);
   $pm->wait_all_children;
 
   print $fh "number of DB records: $db_records_amount\n";
