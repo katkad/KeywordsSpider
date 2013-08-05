@@ -99,9 +99,8 @@ sub debug {
 sub is_already_crawled {
   my ($self) = @_;
 
-#  print Dumper \$self->links;
   foreach (keys %{$self->links}) {
-    # max depth in links hash can be 1 now
+    # max depth in links hash can be 1 at the moment
     if ($self->links->{$_}{depth} == 1 && not defined $self->links->{$_}{fetched}) {
       return 0;
     }
@@ -294,7 +293,6 @@ sub check_website {
 sub fetch_website {
   my ($self, $url, $want_spider, $depth) = @_;
 
-#  print Dumper $self->links;
   $self->root(0);
   $self->get_root($url);
 
@@ -323,8 +321,6 @@ sub spider_website {
 
   $self->debug("PO:\n");
   $self->debug(Dumper $self->links);
-# ma is_already_crawled ked tam uz mozu byt linky ktore maju vacsiu depth ako 1 ?
-# ale z tej jednej startovacej url nemozu by linky s depth vacsie ako 1
 
   my @keys = keys %{$self->links};
 
@@ -351,7 +347,6 @@ sub spider_website {
 sub proceed {
   my ($self, $start, $depth, $want_spider) = @_;
 
-  # fetch_website adds urls to links
   my @keys = keys %{$self->links};
   foreach (@keys) {
     if ($self->links->{$_}{depth} == ($depth) && not defined $self->links->{$_}{fetched}) {
@@ -414,13 +409,10 @@ sub spider_links {
   my ($self) = @_;
 
   $self->add_text("SPIDER LINKS\n");
-#  print Dumper $self->links;
 
   my @zero_keys = keys %{$self->links};
 
   foreach (@zero_keys) {
-#    print Dumper $self->links->{$_}{depth};
-#  print "ZERO " . $_ ."\n";
     $self->settle_website($_);
     $self->spider_website();
     $self->counted(1) if ($self->alerted);

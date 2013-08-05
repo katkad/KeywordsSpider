@@ -3,8 +3,6 @@ package KeywordsSpider;
 use Spider 'find_origin';
 use Modern::Perl;
 use Parallel::ForkManager;
-use Getopt::Long;
-use Data::Dumper;
 
 my @unwanted_params = qw/
   referer
@@ -154,7 +152,6 @@ sub run {
     my ($origin, $origin_domain) = find_origin($website);
 
     if ( $origin_domain !~ /${old_origin_domain}/i ) {
-#      print Dumper \%links;
       $spidered_websites++;
 
       $pm->start and goto CONTINUE;
@@ -168,8 +165,6 @@ sub run {
         web_depth => $web_depth,
       );
       my $count = $spider->spider_links();
-
-#      my $count = spider_links(%links);
 
       $pm->finish($count);
 
@@ -204,9 +199,8 @@ CONTINUE:
     $old_origin_domain = $origin_domain;
   }
 
-#  print Dumper \%links;
   $spidered_websites++;
-  $pm->start and goto END; # do the fork
+  $pm->start and goto END;
 
   my $spider = Spider->new(
     output_file => $fh,
