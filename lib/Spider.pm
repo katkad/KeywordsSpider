@@ -2,6 +2,7 @@ package Spider;
 
 use Modern::Perl;
 use Moose;
+use MooseX::UndefTolerant;
 use Data::Dumper;
 use LWP::UserAgent;
 use HTTP::Request::Common qw(GET);
@@ -16,9 +17,28 @@ has [qw/output_file links/] => (
   required => 1,
 );
 
-has [qw/keywords allowed_keywords debug_enabled web_depth/] => (
+has 'keywords' => (
   is => 'ro',
   required => 1,
+);
+
+has 'allowed_keywords' => (
+  is => 'ro',
+  default => sub{ {} },
+);
+
+has 'debug_enabled' => (
+  is => 'ro',
+  isa => 'Bool',
+  default => 0,
+  predicate => 'has_debug_enabled',
+);
+
+has 'web_depth' => (
+  is => 'ro',
+  isa => 'Int',
+  default => 3,
+  predicate => 'has_web_depth',
 );
 
 has 'output' => (

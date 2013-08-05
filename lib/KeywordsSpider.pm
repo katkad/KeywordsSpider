@@ -113,8 +113,8 @@ sub run {
   my $outfile = $args{outfile} // 'output.log';
   my $keyfile = $args{keyfile} // 'keywords';
   my $allowed_keywords_file = $args{allowed_keywords} // '';
-  my $debug = $args{debug} // 0;
-  my $web_depth = $args{web_depth} // 3;
+  my $debug = $args{debug};
+  my $web_depth = $args{web_depth};
 
   open FILE, "<$infile" or die "problem opening file \'$infile\' for reading\n$!";
   my @input = <FILE>;
@@ -122,7 +122,7 @@ sub run {
 
   my @keywords = load_keywords($keyfile);
 
-  my @allowed_keywords_arr = ();
+  my @allowed_keywords_arr;
   if ($allowed_keywords_file) {
     @allowed_keywords_arr = load_keywords($allowed_keywords_file);
   }
