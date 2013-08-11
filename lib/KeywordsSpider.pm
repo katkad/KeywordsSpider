@@ -37,6 +37,10 @@ sub _normalize_url {
   $url =~ s/^\'//g;
   $url =~ s/\'$//g;
 
+  if($url =~ /^null$/) {
+    return $url;
+  };
+
   if ( $url !~ /http/ ) {
     $url = 'http://' . $url;
   }
@@ -70,6 +74,22 @@ sub _get_domain {
   $domain =~ s/\/.*$//;
 
   return $domain;
+}
+
+sub _match_referrer {
+  my ($referrer, $website, $skip_ref_regexp, $fh) = @_;
+
+  if ( $referrer !~ /${skip_ref_regexp}/ ) {
+    $referrer = _remove_garbage($referrer);
+
+    $links{$referrer} = { depth => 0 };
+
+    my $domain = _get_domain($website);
+
+    if ( $referrer !~ /$domain/i ) {
+      print $fh "NOT matching referrer=$referrer, website=$website\n";
+    }
+  }
 }
 
 sub _get_initial_origin_domain {
@@ -106,7 +126,7 @@ $pm->run_on_finish( sub {
 sub run {
   my %args = @_;
 
-  my $skip_ref_regexp = $args{skip_ref_regexp} // '^http:\/\/null$';
+  my $skip_ref_regexp = $args{skip_ref_regexp} // '^null$';
   my $infile = $args{infile} // 'export';
   my $outfile = $args{outfile} // 'output.log';
   my $keyfile = $args{keyfile} // 'keywords';
@@ -183,17 +203,7 @@ CONTINUE:
     }
     debug("\n", $debug);
 
-    if ( $referrer !~ /${skip_ref_regexp}/ ) {
-      $referrer = _remove_garbage($referrer);
-
-      $links{$referrer} = { depth => 0 };
-
-      my $domain = _get_domain($website);
-
-      if ( $referrer !~ /$domain/i ) {
-        print $fh "NOT matching referrer=$referrer, website=$website\n";
-      }
-    }
+    _match_referrer($referrer, $website, $skip_ref_regexp, $fh);
 
     $old_origin = $origin;
     $old_origin_domain = $origin_domain;
