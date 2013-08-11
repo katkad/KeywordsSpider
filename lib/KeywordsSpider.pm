@@ -171,7 +171,7 @@ sub run {
 
     my ($origin, $origin_domain) = find_origin($website);
 
-    if ( $origin_domain !~ /${old_origin_domain}/i ) {
+    if ( $origin_domain !~ /^${old_origin_domain}$/i ) {
       $spidered_websites++;
 
       $pm->start and goto CONTINUE;
