@@ -230,7 +230,7 @@ END:
 
   print $fh "number of DB records: $db_records_amount\n";
   print $fh "number of spidered websites: $spidered_websites\n";
-  print $fh "number of counted websites: $COUNT\n";
+  print $fh "number of alerted websites: $COUNT\n";
 
   close($fh);
 }
