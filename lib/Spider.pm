@@ -431,3 +431,146 @@ sub spider_links {
 }
 
 1;
+
+=head1 NAME
+
+Spider - web spider searching for keywords
+
+=head1 SYNOPSIS
+
+  use Spider;
+  my $spider = Spider->new(
+    output_file => $opened_filehandle,
+    links => \%links,
+    keywords => \@keywords,
+    allowed_keywords => \%allowed_keywords,
+    debug_enabled => 1,
+    web_depth => 5,
+  );
+
+=head1 DESCRIPTION
+
+Spider is web spider, which spiders links, and matches their content against keywords.
+Keyword trigger ALERT to output_file.
+Allowed keywords do not trigger ALERT.
+
+Websites are defined by 'want_spider' parameter in the links hash.
+The are spidered to 'web_depth' (default 3), and links in their content are added to links hash.
+Other links are just checked for keywords, no spidering.
+
+=head1 ARGUMENTS
+
+=over 4
+
+=item output_file
+
+opened file handle
+
+=item keywords
+
+array of keywords you want to find
+
+=item allowed_keywords
+
+hash of keywords which do not trigger ALERT. Like:
+
+  my %allowed_keywords = (
+    wuord1 => 1,
+  );
+
+=item links
+
+websites and referer urls you want to spider. Like:
+
+  my %links = (
+    'http://website.sk' => {
+      'want_spider' => 1,
+      'depth' => 0,
+    },
+    'http://referer.sk' => {
+      'depth' => 0,
+    },
+  );
+
+note, that links hash is changed, when running the spider
+
+=item debug_enabled
+
+prints debug messages to standard output
+
+=item web_depth
+
+depth to which website will be scanned. Default is 3.
+
+=back
+
+=head1 METHODS
+
+=over 4
+
+=item spider_links
+
+main method
+
+=item settle_website WEBSITE
+
+makes necessary settings to spider website
+
+=item spider_website
+
+scans website according to settings
+
+=item check_website
+
+checks if url's content matches keywords
+
+=item add_links_from_root
+
+add links in url's content to links hash
+
+=item debug
+
+if debug enabled, prints string to standard output
+
+=back
+
+=head1 SAMPLE OUTPUT
+
+  SPIDER http://domain.sk
+  this IS NOT counted as alerted
+
+  ----------------------------------------------------------------------
+
+  SPIDER LINKS
+
+  SPIDER http://trololo.sk
+  ERROR:404 Not Found
+  this IS NOT counted as alerted
+
+  SPIDER LINKS
+
+  SPIDER http://domain.sk/old.html
+  possible bad content http://domain.sk/old.html word2
+  found keywords: 1
+
+  fetching http://domain.sk/new.html
+  ALERT possible bad content http://domain.sk/new.html  wuord1 word2
+  found keywords: 2
+
+  fetching http://domain.sk/lala.txt
+  SKIPPING because of content type or length
+
+  SPIDER http://domain.sk
+  this IS counted as alerted
+
+=head1 SEE ALSO
+
+L<KeywordsSpider> -- takes files as arguments and prepares attributes for Spider
+
+=head1 COPYRIGHT
+
+Copyright 2013 Katarina Durechova
+
+This program is free software; you can redistribute it and/or modify it under the same terms as Perl itself.
+
+=cut

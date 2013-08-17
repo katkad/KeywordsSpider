@@ -234,3 +234,101 @@ END:
 
   close($fh);
 }
+
+1;
+
+
+=head1 NAME
+
+KeywordsSpider - web spider searching for keywords
+
+=head1 SYNOPSIS
+
+  use KeywordsSpider;
+  KeywordsSpider::run(
+    outfile => "output_test",
+    infile => "export.sql",
+    keyfile => "keywords_new",
+    debug => 1,
+    skip_ref_regexp => "(^http://trala|^null|twig.html\$)",
+    allowed_keywords => "allowed_keywords",
+    web_depth => 5
+  );
+
+=head1 DESCRIPTION
+
+KeywordsSpider is web spider, which takes urls and keywords from file and outputs urls matching the keywords to another file.
+
+Referers can be specified in input file. Their domain is matched to website's domain.
+
+It spiders in 10 parallel processes.
+It takes files as arguments and prepares attributes for Spider.
+
+
+=head1 ARGUMENTS
+
+=over 4
+
+=item infile
+
+file with website and referer urls within. Like:
+
+  'domain.sk/twig.html','null'
+  domain.sk,domain2.sk
+  another-domain.sk/twig.html,null
+  another-domain.sk/twig.html,http://trala.sk
+
+no space after comma, apostrophes not necessary
+
+=item keyfile
+
+file with newline separates keywords. Like:
+
+  word1
+  wuord2
+  wiaord3
+
+=item allowed_keywords
+
+file with newline separated keywords, which do not trigger ALERT to output file. Like:
+
+  wuord2
+
+=item outfile
+
+output file
+
+=item debug
+
+do you want debug to standard output ? It's turned off by default.
+
+=item skip_ref_regexp
+
+you can specify various referers for the same website. If you don't want to crawl specific domain,
+or any part of url, you put the regular expression here. Like:
+
+  (^http://trala|^null|twig.html\$)
+
+=back
+
+=head1 METHODS
+
+=over 4
+
+=item run ARGS
+
+runs
+
+=back
+
+=head1 SEE ALSO
+
+L<Spider> -- core spidering and matching module
+
+=head1 COPYRIGHT
+
+Copyright 2013 Katarina Durechova
+
+This program is free software; you can redistribute it and/or modify it under the same terms as Perl itself.
+
+=cut
