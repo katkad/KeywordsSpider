@@ -1,0 +1,83 @@
+NAME
+
+KeywordsSpider - web spider searching for keywords
+
+SYNOPSIS
+
+  use KeywordsSpider;
+  KeywordsSpider::run(
+    outfile => "output_test",
+    infile => "export.sql",
+    keyfile => "keywords_new",
+    debug => 1,
+    skip_ref_regexp => "(^http://trala|^null|twig.html\$)",
+    allowed_keywords => "allowed_keywords",
+    web_depth => 5
+  );
+
+DESCRIPTION
+
+KeywordsSpider is web spider, which takes urls and keywords from file and outputs urls matching the keywords to another file.
+
+Referers can be specified in input file. Their domain is matched to website's domain.
+
+It spiders in 10 parallel processes.
+It takes files as arguments and prepares attributes for Spider.
+
+
+ARGUMENTS
+
+infile
+
+    file with website and referer urls within. Like:
+
+      'domain.sk/twig.html','null'
+      domain.sk,domain2.sk
+      another-domain.sk/twig.html,null
+      another-domain.sk/twig.html,http://trala.sk
+
+    no space after comma, apostrophes not necessary
+
+keyfile
+
+    file with newline separates keywords. Like:
+
+      word1
+      wuord2
+      wiaord3
+
+allowed_keywords
+
+    file with newline separated keywords, which do not trigger ALERT to output file. Like:
+
+      wuord2
+
+outfile
+
+  output file
+
+debug
+
+    do you want debug to standard output ? It's turned off by default.
+
+skip_ref_regexp
+
+    you can specify various referers for the same website. If you don't want to crawl specific domain,
+    or any part of url, you put the regular expression here. Like:
+      (^http://trala|^null|twig.html\$) 
+    
+METHODS
+
+run %ARGS
+
+    runs
+
+SEE ALSO
+
+    Spider -- core spidering and matching module
+
+COPYRIGHT
+
+Copyright 2013 katkad
+
+This program is free software; you can redistribute it and/or modify it under the same terms as Perl itself.
