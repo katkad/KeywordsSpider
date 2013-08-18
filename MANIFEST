@@ -1,0 +1,6 @@
+Build.PL
+lib/KeywordsSpider.pm
+lib/KeywordsSpider/Core.pm
+MANIFEST			This list of files
+t/Core.t
+t/KeywordsSpider.t
