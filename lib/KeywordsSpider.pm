@@ -1,6 +1,6 @@
 package KeywordsSpider;
 
-use Spider 'find_origin';
+use KeywordsSpider::Core 'find_origin';
 use Modern::Perl;
 use Parallel::ForkManager;
 
@@ -176,7 +176,7 @@ sub run {
 
       $pm->start and goto CONTINUE;
 
-      my $spider = Spider->new(
+      my $spider = KeywordsSpider::Core->new(
         output_file => $fh,
         links => \%links,
         keywords => \@keywords,
@@ -212,7 +212,7 @@ CONTINUE:
   $spidered_websites++;
   $pm->start and goto END;
 
-  my $spider = Spider->new(
+  my $spider = KeywordsSpider::Core->new(
     output_file => $fh,
     links => \%links,
     keywords => \@keywords,
@@ -262,7 +262,7 @@ KeywordsSpider is web spider, which takes urls and keywords from file and output
 Referers can be specified in input file. Their domain is matched to website's domain.
 
 It spiders in 10 parallel processes.
-It takes files as arguments and prepares attributes for Spider.
+It takes files as arguments and prepares attributes for KeywordsSpider::Core.
 
 
 =head1 ARGUMENTS
@@ -323,7 +323,7 @@ runs
 
 =head1 SEE ALSO
 
-L<Spider> -- core spidering and matching module
+L<KeywordsSpider::Core> -- core spidering and matching module
 
 =head1 COPYRIGHT
 

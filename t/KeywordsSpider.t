@@ -7,8 +7,8 @@ describe "KeywordsSpider" => sub {
   };
 
   #spider will consider websites alerted
-  local *Spider::spider_links;
-  *Spider::spider_links = sub {return 1;};
+  local *KeywordsSpider::Core::spider_links;
+  *KeywordsSpider::Core::spider_links = sub {return 1;};
 
   KeywordsSpider::run(
     outfile => "t/output_test",

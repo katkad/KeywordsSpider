@@ -1,4 +1,4 @@
-package Spider;
+package KeywordsSpider::Core;
 
 use Modern::Perl;
 use Moose;
@@ -434,12 +434,12 @@ sub spider_links {
 
 =head1 NAME
 
-Spider - web spider searching for keywords
+KeywordsSpider::Core - core for web spider searching for keywords
 
 =head1 SYNOPSIS
 
-  use Spider;
-  my $spider = Spider->new(
+  use KeywordsSpider::Core;
+  my $spider = KeywordsSpider::Core->new(
     output_file => $opened_filehandle,
     links => \%links,
     keywords => \@keywords,
@@ -450,7 +450,7 @@ Spider - web spider searching for keywords
 
 =head1 DESCRIPTION
 
-Spider is web spider, which spiders links, and matches their content against keywords.
+KeywordsSpider::Core is core for web spider, which spiders links, and matches their content against keywords.
 Keyword trigger ALERT to output_file.
 Allowed keywords do not trigger ALERT.
 
@@ -565,7 +565,7 @@ if debug enabled, prints string to standard output
 
 =head1 SEE ALSO
 
-L<KeywordsSpider> -- takes files as arguments and prepares attributes for Spider
+L<KeywordsSpider> -- takes files as arguments and prepares attributes for KeywordsSpider::Core
 
 =head1 COPYRIGHT
 

@@ -1,10 +1,10 @@
-use Spider;
+use KeywordsSpider::Core;
 use Test::Spec;
 use Test::MockObject;
 use Test::Spec::Mocks;
 use HTML::TreeBuilder;
 
-describe "Spider" => sub {
+describe "KeywordsSpider::Core" => sub {
   my $string = q{};
   open my ($fh), '>', \$string;
 
@@ -40,7 +40,7 @@ describe "Spider" => sub {
   };
 
   it "error response" => sub {
-    my $spider = Spider->new(
+    my $spider = KeywordsSpider::Core->new(
       %spider_params,
       links => {$url => $url_params,},
     );
@@ -69,7 +69,7 @@ EF
 
     my $root = HTML::TreeBuilder->new_from_content($html);
 
-    my $spider = Spider->new(
+    my $spider = KeywordsSpider::Core->new(
       %spider_params,
       links => {$url => $url_params,},
       root => $root,
@@ -94,7 +94,7 @@ EF
 
     my $root = HTML::TreeBuilder->new_from_content($html);
 
-    my $spider = Spider->new(
+    my $spider = KeywordsSpider::Core->new(
       %spider_params,
       links => {$url => $url_params,},
       root => $root,
@@ -124,7 +124,7 @@ HTMLEND
 
       my $root = HTML::TreeBuilder->new_from_content($html);
 
-      my $spider = Spider->new(
+      my $spider = KeywordsSpider::Core->new(
         %spider_params,
         links => {$url => $url_params,},
         root => $root,
@@ -147,7 +147,7 @@ HTMLEND
 
       my $root = HTML::TreeBuilder->new_from_content($html);
 
-      my $spider = Spider->new(
+      my $spider = KeywordsSpider::Core->new(
         %spider_params,
         links => {$url => $url_params,},
         root => $root,
@@ -161,7 +161,7 @@ HTMLEND
   };
 
   it "uses defaults if not specified" => sub {
-    my $spider = Spider->new(
+    my $spider = KeywordsSpider::Core->new(
       output_file => $fh,
       links => {$url => $url_params,},
       keywords => \@keywords,
